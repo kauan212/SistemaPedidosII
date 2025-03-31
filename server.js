@@ -26,6 +26,11 @@ const transporter = nodemailer.createTransport({
     }
 });
 
+// Rota GET para a raiz ("/")
+app.get('/', (req, res) => {
+    res.send('Servidor funcionando!');
+});
+
 // Rota para receber os pedidos
 app.post('/enviar-pedido', (req, res) => {
     const {
