@@ -956,13 +956,24 @@
                 produto31: produto31
             };
 
-            fetch('http://localhost:3000/enviar-pedido', {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json'
-                },
-                body: JSON.stringify(dadosPedido)
-            })
+
+            fetch("https://meuservico.onrender.com/enviar-pedido", {
+    method: "POST",
+    headers: {
+        "Content-Type": "application/json"
+    },
+    body: JSON.stringify(dadosPedido)
+})
+
+
+           // fetch('http://localhost:3000/enviar-pedido', {
+           //     method: 'POST',
+           //     headers: {
+           //         'Content-Type': 'application/json'
+           //     },
+           //     body: JSON.stringify(dadosPedido)
+           // })
+
             .then(response => response.json())
             .then(data => {
                 if (data.status === 'success') {
