@@ -2,9 +2,9 @@ const express = require('express');
 const nodemailer = require('nodemailer');
 const bodyParser = require('body-parser');
 const cors = require('cors');
-const app = express();
+const path = require('path'); // Adicionar para manipular caminhos de arquivos
 
-// Usando a variável de ambiente PORT ou 3000 como fallback
+const app = express();
 const PORT = process.env.PORT || 3000;
 
 // Middleware para habilitar CORS
@@ -13,6 +13,9 @@ app.use(cors());
 // Middleware para analisar os dados do corpo
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
+
+// Serve arquivos estáticos da raiz, onde o 'index.html' está localizado
+app.use(express.static(path.join(__dirname))); // Serve os arquivos na raiz do projeto
 
 // Configurar o transporte de e-mail (usando o Gmail como exemplo)
 const transporter = nodemailer.createTransport({
@@ -26,9 +29,9 @@ const transporter = nodemailer.createTransport({
     }
 });
 
-// Rota GET para a raiz ("/")
+// Rota GET para a raiz ("/") - Agora você não precisa mais dessa rota, pois a static serve o index.html
 app.get('/', (req, res) => {
-    res.send('Servidor funcionando!');
+    res.sendFile(path.join(__dirname, 'index.html')); // Serve o arquivo index.html da raiz
 });
 
 // Rota para receber os pedidos
