@@ -3,12 +3,9 @@ const nodemailer = require('nodemailer');
 const bodyParser = require('body-parser');
 const cors = require('cors');
 const app = express();
+
+// Usando a variável de ambiente PORT ou 3000 como fallback
 const PORT = process.env.PORT || 3000;
-app.listen(PORT, () => {
-    console.log(`Servidor rodando na porta ${PORT}`);
-});
-
-
 
 // Middleware para habilitar CORS
 app.use(cors());
@@ -72,7 +69,6 @@ Morango Preto: ${produto28} unidades\n
 Morango Branco: ${produto29} unidades\n
 Uva: ${produto30} unidades\n
 Cereja: ${produto31} unidades`
-
     };
 
     // Enviar o e-mail
@@ -86,7 +82,7 @@ Cereja: ${produto31} unidades`
     });
 });
 
-// Iniciar o servidor
-app.listen(port, () => {
-    console.log(`Servidor rodando na porta ${port}`);
+// Iniciar o servidor apenas uma vez, usando a porta correta
+app.listen(PORT, () => {
+    console.log(`Servidor rodando na porta ${PORT}`);
 });
