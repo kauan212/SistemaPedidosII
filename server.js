@@ -11,9 +11,11 @@ const corsOptions = {
     origin: 'https://sistemapedidosii.onrender.com', // Permite apenas esse domínio
     methods: ['GET', 'POST'], // Permite métodos GET e POST
     allowedHeaders: ['Content-Type'], // Permite o cabeçalho Content-Type
+    credentials: true // Permite o envio de cookies (caso seja necessário)
 };
 
-app.use(cors(corsOptions)); // Use a configuração do CORS
+// Use o middleware CORS com a configuração acima
+app.use(cors(corsOptions));
 
 
 // Middleware para habilitar CORS
