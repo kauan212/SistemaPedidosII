@@ -3,7 +3,11 @@ const nodemailer = require('nodemailer');
 const bodyParser = require('body-parser');
 const cors = require('cors');
 const app = express();
-const PORT = process.env.PORT || 3000; // A porta será fornecida pela plataforma, ou 3000 como fallback
+const PORT = process.env.PORT || 3000;
+app.listen(PORT, () => {
+    console.log(`Servidor rodando na porta ${PORT}`);
+});
+
 
 
 // Middleware para habilitar CORS
