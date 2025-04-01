@@ -7,19 +7,8 @@ const path = require('path'); // Adicionar para manipular caminhos de arquivos
 const app = express();
 const PORT = process.env.PORT || 3000;
 
-const corsOptions = {
-    origin: 'https://sistemapedidosii.onrender.com', // Permite apenas esse domínio
-    methods: ['GET', 'POST'], // Permite métodos GET e POST
-    allowedHeaders: ['Content-Type'], // Permite o cabeçalho Content-Type
-    credentials: true // Permite o envio de cookies (caso seja necessário)
-};
-
-// Use o middleware CORS com a configuração acima
-app.use(cors(corsOptions));
-
-
-// Middleware para habilitar CORS
-// app.use(cors());
+// Configuração do CORS para permitir todos os domínios
+app.use(cors()); // Permite todos os domínios
 
 // Middleware para analisar os dados do corpo
 app.use(bodyParser.json());
