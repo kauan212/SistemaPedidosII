@@ -1,0 +1,999 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sistema de Pedidos</title>
+    <style>
+        /* Estilo do corpo da página */
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #f4d8ad; /* Cor de fundo alterada */
+        }
+        .container {
+            max-width: 900px;
+            margin: 20px auto;
+            padding: 20px;
+            background-color: white;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        }
+        h1 {
+            text-align: center;
+        }
+        section {
+            margin-bottom: 40px;
+        }
+        /* Estilo para a imagem no topo */
+        .top-image {
+            display: block;
+            margin: 0 auto 30px auto;
+            width: 100%;          /* Ajusta a largura para 100% do container */
+            max-width: 450px;     /* Limita a largura máxima para 250px */
+        }
+        .section-title img {
+            width: 100%;          /* Ajusta a largura para 100% do container */
+            max-width: 200px;     /* Limita a largura máxima para 400px */
+            display: block;
+            margin: 10 auto 30px auto !important;  /* Centraliza a imagem e aumenta o espaçamento inferior */
+        }
+        .produto-container {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+            padding: 15px;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            background-color: #f9f9f9;
+        }
+        .produto-info {
+            display: flex;
+            align-items: center;
+        }
+        .produto-info img {
+            width: 50px;  /* Tamanho da imagem */
+            height: 50px;
+            margin-right: 15px;
+        }
+        .produto-info div {
+            display: flex;
+            flex-direction: column;
+            margin-right: 20px;  /* Espaçamento entre o nome e a caixa de quantidade */
+        }
+        .produto-info span {
+            font-weight: bold;
+        }
+        .quantidade-container {
+            display: flex;
+            align-items: center;
+        }
+        input[type="number"] {
+            width: 60px;
+            height: 30px;
+            font-size: 16px;
+            text-align: center;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+            margin: 0 10px;  /* Espaçamento entre os botões e a caixa de quantidade */
+        }
+        .button {
+            width: 30px;
+            height: 30px;
+            cursor: pointer;
+        }
+        .button:focus {
+            outline: none;
+        }
+        #revendedor-container {
+            margin-bottom: 20px;
+        }
+        label {
+            font-weight: bold;
+            display: block;
+            margin-bottom: 8px;
+        }
+        input[type="text"] {
+            width: 100%;
+            padding: 10px;
+            font-size: 16px;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+        }
+        button {
+            display: block;
+            width: 100%;
+            padding: 15px;
+            background-color: #4CAF50;
+            color: white;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 16px;
+        }
+        button:hover {
+            background-color: #45a049;
+        }
+        .alert {
+            text-align: center;
+            margin-top: 20px;
+            padding: 10px;
+            color: white;
+            background-color: #f44336;
+            display: none;
+        }
+        .success {
+            background-color: #4CAF50;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <!-- Imagem da faca acima do título -->
+        <img src="img/faca.png" alt="Imagem da faca" class="top-image">
+
+        <!-- Campo para o nome do revendedor -->
+        <div id="revendedor-container">
+            <label for="revendedor">Digite seu nome</label>
+            <input type="text" id="revendedor" required>
+        </div>
+
+        <!-- Seção Produtos Tradicionais -->
+        <section id="tradicionais">
+            <div class="section-title">
+                <!-- Imagem representando os produtos tradicionais -->
+                <img src="img/tradicionais.png" alt="Produtos Tradicionais">
+            </div>
+
+            <!-- Produto Brigadeiro -->
+            <div class="produto-container">
+                <div class="produto-info">
+                    <img src="img/brigadeiro.png" alt="Brigadeiro">
+                    <div>
+                        <span>Brigadeiro</span>
+                    </div>
+                </div>
+                <div class="quantidade-container">
+                    <img src="img/-.png" class="button" id="produto1-decremento" alt="Decrementar">
+                    <input type="number" id="produto1" value="0" min="0" required>
+                    <img src="img/+.png" class="button" id="produto1-incremento" alt="Incrementar">
+                </div>
+            </div>
+
+            <!-- Produto Beijinho -->
+            <div class="produto-container">
+                <div class="produto-info">
+                    <img src="img/beijinho.png" alt="Beijinho">
+                    <div>
+                        <span>Beijinho</span>
+                    </div>
+                </div>
+                <div class="quantidade-container">
+                    <img src="img/-.png" class="button" id="produto2-decremento" alt="Decrementar">
+                    <input type="number" id="produto2" value="0" min="0" required>
+                    <img src="img/+.png" class="button" id="produto2-incremento" alt="Incrementar">
+                </div>
+            </div>
+
+            <!-- Produto Paçoca -->
+            <div class="produto-container">
+                <div class="produto-info">
+                    <img src="img/pacoca.png" alt="Paçoca">
+                    <div>
+                        <span>Paçoca</span>
+                    </div>
+                </div>
+                <div class="quantidade-container">
+                    <img src="img/-.png" class="button" id="produto3-decremento" alt="Decrementar">
+                    <input type="number" id="produto3" value="0" min="0" required>
+                    <img src="img/+.png" class="button" id="produto3-incremento" alt="Incrementar">
+                </div>
+            </div>
+
+            <!-- Novo Produto Pé de Moça -->
+            <div class="produto-container">
+                <div class="produto-info">
+                    <img src="img/pe-de-moca.png" alt="Pé de Moça">
+                    <div>
+                        <span>Pé de Moça</span>
+                    </div>
+                </div>
+                <div class="quantidade-container">
+                    <img src="img/-.png" class="button" id="produto4-decremento" alt="Decrementar">
+                    <input type="number" id="produto4" value="0" min="0" required>
+                    <img src="img/+.png" class="button" id="produto4-incremento" alt="Incrementar">
+                </div>
+            </div>
+
+            <!-- Novo Produto Casadinho -->
+            <div class="produto-container">
+                <div class="produto-info">
+                    <img src="img/casadinho.png" alt="Casadinho">
+                    <div>
+                        <span>Casadinho</span>
+                    </div>
+                </div>
+                <div class="quantidade-container">
+                    <img src="img/-.png" class="button" id="produto5-decremento" alt="Decrementar">
+                    <input type="number" id="produto5" value="0" min="0" required>
+                    <img src="img/+.png" class="button" id="produto5-incremento" alt="Incrementar">
+                </div>
+            </div>
+
+            <!-- Novo Produto Olho de Sogra -->
+            <div class="produto-container">
+                <div class="produto-info">
+                    <img src="img/olho-de-sogra.png" alt="Olho de Sogra">
+                    <div>
+                        <span>Olho de Sogra</span>
+                    </div>
+                </div>
+                <div class="quantidade-container">
+                    <img src="img/-.png" class="button" id="produto6-decremento" alt="Decrementar">
+                    <input type="number" id="produto6" value="0" min="0" required>
+                    <img src="img/+.png" class="button" id="produto6-incremento" alt="Incrementar">
+                </div>
+            </div>
+
+            <!-- Novo Produto Cajuzinho -->
+            <div class="produto-container">
+                <div class="produto-info">
+                    <img src="img/cajuzinho.png" alt="Cajuzinho">
+                    <div>
+                        <span>Cajuzinho</span>
+                    </div>
+                </div>
+                <div class="quantidade-container">
+                    <img src="img/-.png" class="button" id="produto7-decremento" alt="Decrementar">
+                    <input type="number" id="produto7" value="0" min="0" required>
+                    <img src="img/+.png" class="button" id="produto7-incremento" alt="Incrementar">
+                </div>
+            </div>
+
+            <!-- Novo Produto Coco Queimado -->
+            <div class="produto-container">
+                <div class="produto-info">
+                    <img src="img/coco-queimado.png" alt="Coco Queimado">
+                    <div>
+                        <span>Coco Queimado</span>
+                    </div>
+                </div>
+                <div class="quantidade-container">
+                    <img src="img/-.png" class="button" id="produto8-decremento" alt="Decrementar">
+                    <input type="number" id="produto8" value="0" min="0" required>
+                    <img src="img/+.png" class="button" id="produto8-incremento" alt="Incrementar">
+                </div>
+            </div>
+        </section>
+
+        <!-- Seção Produtos Gourmet -->
+        <section id="gourmet">
+            <div class="section-title">
+                <!-- Imagem representando os produtos gourmet -->
+                <img src="img/gourmet.png" alt="Produtos Gourmet">
+            </div>
+
+            <!-- Ninho Com Nutella -->
+            <div class="produto-container">
+                <div class="produto-info">
+                    <img src="img/ninho-com-nutella.png" alt="Ninho Com Nutella">
+                    <div>
+                        <span>Ninho Com Nutella</span>
+                    </div>
+                </div>
+                <div class="quantidade-container">
+                    <img src="img/-.png" class="button" id="produto9-decremento" alt="Decrementar">
+                    <input type="number" id="produto9" value="0" min="0" required>
+                    <img src="img/+.png" class="button" id="produto9-incremento" alt="Incrementar">
+                </div>
+            </div>
+
+            <!-- Nesquik Com Nutella -->
+            <div class="produto-container">
+                <div class="produto-info">
+                    <img src="img/nesquik-com-nutella.png" alt="Nesquik Com Nutella">
+                    <div>
+                        <span>Nesquik Com Nutella</span>
+                    </div>
+                </div>
+                <div class="quantidade-container">
+                    <img src="img/-.png" class="button" id="produto10-decremento" alt="Decrementar">
+                    <input type="number" id="produto10" value="0" min="0" required>
+                    <img src="img/+.png" class="button" id="produto10-incremento" alt="Incrementar">
+                </div>
+            </div>
+
+            <!-- Churros -->
+            <div class="produto-container">
+                <div class="produto-info">
+                    <img src="img/churros.png" alt="Churros">
+                    <div>
+                        <span>Churros</span>
+                    </div>
+                </div>
+                <div class="quantidade-container">
+                    <img src="img/-.png" class="button" id="produto11-decremento" alt="Decrementar">
+                    <input type="number" id="produto11" value="0" min="0" required>
+                    <img src="img/+.png" class="button" id="produto11-incremento" alt="Incrementar">
+                </div>
+            </div>
+
+            <!-- Novo Produto M&M -->
+            <div class="produto-container">
+                <div class="produto-info">
+                    <img src="img/m-e-m.png" alt="M&M">
+                    <div>
+                        <span>M&M</span>
+                    </div>
+                </div>
+                <div class="quantidade-container">
+                    <img src="img/-.png" class="button" id="produto12-decremento" alt="Decrementar">
+                    <input type="number" id="produto12" value="0" min="0" required>
+                    <img src="img/+.png" class="button" id="produto12-incremento" alt="Incrementar">
+                </div>
+            </div>
+
+            <!-- Novo Produto Charge Com Nutella -->
+            <div class="produto-container">
+                <div class="produto-info">
+                    <img src="img/charge-com-nutella.png" alt="Charge Com Nutella">
+                    <div>
+                        <span>Charge Com Nutella</span>
+                    </div>
+                </div>
+                <div class="quantidade-container">
+                    <img src="img/-.png" class="button" id="produto13-decremento" alt="Decrementar">
+                    <input type="number" id="produto13" value="0" min="0" required>
+                    <img src="img/+.png" class="button" id="produto13-incremento" alt="Incrementar">
+                </div>
+            </div>
+
+            <!-- Novo Produto Chocoball -->
+            <div class="produto-container">
+                <div class="produto-info">
+                    <img src="img/chocoball.png" alt="Chocoball">
+                    <div>
+                        <span>Chocoball</span>
+                    </div>
+                </div>
+                <div class="quantidade-container">
+                    <img src="img/-.png" class="button" id="produto14-decremento" alt="Decrementar">
+                    <input type="number" id="produto14" value="0" min="0" required>
+                    <img src="img/+.png" class="button" id="produto14-incremento" alt="Incrementar">
+                </div>
+            </div>
+
+        </section>
+
+                <!-- Seção Produtos Finos -->
+                <section id="finos">
+                    <div class="section-title">
+                        <!-- Imagem representando os produtos finos -->
+                        <img src="img/finos.png" alt="Produtos Finos">
+                    </div>
+        
+                    <!-- Produto Bombom de Nozes -->
+                    <div class="produto-container">
+                        <div class="produto-info">
+                            <img src="img/bombom-de-nozes.png" alt="Bombom de Nozes">
+                            <div>
+                                <span>Bombom de Nozes</span>
+                            </div>
+                        </div>
+                        <div class="quantidade-container">
+                            <img src="img/-.png" class="button" id="produto15-decremento" alt="Decrementar">
+                            <input type="number" id="produto15" value="0" min="0" required>
+                            <img src="img/+.png" class="button" id="produto15-incremento" alt="Incrementar">
+                        </div>
+                    </div>
+        
+                    <!-- Produto Camafeu -->
+                    <div class="produto-container">
+                        <div class="produto-info">
+                            <img src="img/camafeu.png" alt="Camafeu">
+                            <div>
+                                <span>Camafeu</span>
+                            </div>
+                        </div>
+                        <div class="quantidade-container">
+                            <img src="img/-.png" class="button" id="produto16-decremento" alt="Decrementar">
+                            <input type="number" id="produto16" value="0" min="0" required>
+                            <img src="img/+.png" class="button" id="produto16-incremento" alt="Incrementar">
+                        </div>
+                    </div>
+        
+                    <!-- Produto Rocher Branco -->
+                    <div class="produto-container">
+                        <div class="produto-info">
+                            <img src="img/rocher-branco.png" alt="Rocher Branco">
+                            <div>
+                                <span>Rocher Branco</span>
+                            </div>
+                        </div>
+                        <div class="quantidade-container">
+                            <img src="img/-.png" class="button" id="produto17-decremento" alt="Decrementar">
+                            <input type="number" id="produto17" value="0" min="0" required>
+                            <img src="img/+.png" class="button" id="produto17-incremento" alt="Incrementar">
+                        </div>
+                    </div>
+        
+                    <!-- Novo Produto Rocher -->
+                    <div class="produto-container">
+                        <div class="produto-info">
+                            <img src="img/rocher.png" alt="Rocher">
+                            <div>
+                                <span>Rocher</span>
+                            </div>
+                        </div>
+                        <div class="quantidade-container">
+                            <img src="img/-.png" class="button" id="produto18-decremento" alt="Decrementar">
+                            <input type="number" id="produto18" value="0" min="0" required>
+                            <img src="img/+.png" class="button" id="produto18-incremento" alt="Incrementar">
+                        </div>
+                    </div>
+        
+                    <!-- Novo Produto Maracujá -->
+                    <div class="produto-container">
+                        <div class="produto-info">
+                            <img src="img/maracuja.png" alt="Maracuja">
+                            <div>
+                                <span>Maracujá</span>
+                            </div>
+                        </div>
+                        <div class="quantidade-container">
+                            <img src="img/-.png" class="button" id="produto19-decremento" alt="Decrementar">
+                            <input type="number" id="produto19" value="0" min="0" required>
+                            <img src="img/+.png" class="button" id="produto19-incremento" alt="Incrementar">
+                        </div>
+                    </div>
+        
+                    <!-- Novo Produto Damasco -->
+                    <div class="produto-container">
+                        <div class="produto-info">
+                            <img src="img/damasco.png" alt="Damasco">
+                            <div>
+                                <span>Damasco</span>
+                            </div>
+                        </div>
+                        <div class="quantidade-container">
+                            <img src="img/-.png" class="button" id="produto20-decremento" alt="Decrementar">
+                            <input type="number" id="produto20" value="0" min="0" required>
+                            <img src="img/+.png" class="button" id="produto20-incremento" alt="Incrementar">
+                        </div>
+                    </div>
+        
+                    <!-- Novo Produto Laka -->
+                    <div class="produto-container">
+                        <div class="produto-info">
+                            <img src="img/laka.png" alt="Laka">
+                            <div>
+                                <span>Laka</span>
+                            </div>
+                        </div>
+                        <div class="quantidade-container">
+                            <img src="img/-.png" class="button" id="produto21-decremento" alt="Decrementar">
+                            <input type="number" id="produto21" value="0" min="0" required>
+                            <img src="img/+.png" class="button" id="produto21-incremento" alt="Incrementar">
+                        </div>
+                    </div>
+        
+                    <!-- Novo Produto Amarula -->
+                    <div class="produto-container">
+                        <div class="produto-info">
+                            <img src="img/amarula.png" alt="Amarula">
+                            <div>
+                                <span>Amarula</span>
+                            </div>
+                        </div>
+                        <div class="quantidade-container">
+                            <img src="img/-.png" class="button" id="produto22-decremento" alt="Decrementar">
+                            <input type="number" id="produto22" value="0" min="0" required>
+                            <img src="img/+.png" class="button" id="produto22-incremento" alt="Incrementar">
+                        </div>
+                    </div>
+
+                    <!-- Novo Cacau 50% -->
+                    <div class="produto-container">
+                        <div class="produto-info">
+                            <img src="img/cacau-50.png" alt="Cacau 50">
+                            <div>
+                                <span>Cacau 50%</span>
+                            </div>
+                        </div>
+                        <div class="quantidade-container">
+                            <img src="img/-.png" class="button" id="produto23-decremento" alt="Decrementar">
+                            <input type="number" id="produto23" value="0" min="0" required>
+                            <img src="img/+.png" class="button" id="produto23-incremento" alt="Incrementar">
+                        </div>
+                    </div>
+
+                    <!-- Novo Café -->
+                    <div class="produto-container">
+                        <div class="produto-info">
+                            <img src="img/cafe.png" alt="Cafe">
+                            <div>
+                                <span>Café</span>
+                            </div>
+                        </div>
+                        <div class="quantidade-container">
+                            <img src="img/-.png" class="button" id="produto24-decremento" alt="Decrementar">
+                            <input type="number" id="produto24" value="0" min="0" required>
+                            <img src="img/+.png" class="button" id="produto24-incremento" alt="Incrementar">
+                        </div>
+                    </div>
+
+                    <!-- Novo Produto Castanha -->
+                    <div class="produto-container">
+                        <div class="produto-info">
+                            <img src="img/castanha.png" alt="Castanha">
+                            <div>
+                                <span>Castanha</span>
+                            </div>
+                        </div>
+                        <div class="quantidade-container">
+                            <img src="img/-.png" class="button" id="produto25-decremento" alt="Decrementar">
+                            <input type="number" id="produto25" value="0" min="0" required>
+                            <img src="img/+.png" class="button" id="produto25-incremento" alt="Incrementar">
+                        </div>
+                    </div>
+
+                    <!-- Novo Produto Rum -->
+                    <div class="produto-container">
+                        <div class="produto-info">
+                            <img src="img/rum.png" alt="Rum">
+                            <div>
+                                <span>Rum</span>
+                            </div>
+                        </div>
+                        <div class="quantidade-container">
+                            <img src="img/-.png" class="button" id="produto26-decremento" alt="Decrementar">
+                            <input type="number" id="produto26" value="0" min="0" required>
+                            <img src="img/+.png" class="button" id="produto26-incremento" alt="Incrementar">
+                        </div>
+                    </div>
+
+                    <!-- Novo Produto Prestígio -->
+                    <div class="produto-container">
+                        <div class="produto-info">
+                            <img src="img/prestigio.png" alt="Prestigio">
+                            <div>
+                                <span>Prestígio</span>
+                            </div>
+                        </div>
+                        <div class="quantidade-container">
+                            <img src="img/-.png" class="button" id="produto27-decremento" alt="Decrementar">
+                            <input type="number" id="produto27" value="0" min="0" required>
+                            <img src="img/+.png" class="button" id="produto27-incremento" alt="Incrementar">
+                        </div>
+                    </div>
+                </section>
+
+                <!-- Seção Produtos Finos com Frutas -->
+        <section id="finos com frutas">
+            <div class="section-title">
+                <!-- Imagem representando os produtos gourmet -->
+                <img src="img/finos-com-frutas.png" alt="Produtos Finos Com Frutas">
+            </div>
+
+            <!-- Morangop -->
+            <div class="produto-container">
+                <div class="produto-info">
+                    <img src="img/morangop.png" alt="Morango Preto">
+                    <div>
+                        <span>Morango</span>
+                    </div>
+                </div>
+                <div class="quantidade-container">
+                    <img src="img/-.png" class="button" id="produto28-decremento" alt="Decrementar">
+                    <input type="number" id="produto28" value="0" min="0" required>
+                    <img src="img/+.png" class="button" id="produto28-incremento" alt="Incrementar">
+                </div>
+            </div>
+
+            <!-- Morangob -->
+            <div class="produto-container">
+                <div class="produto-info">
+                    <img src="img/morangob.png" alt="Morango Branco">
+                    <div>
+                        <span>Morango</span>
+                    </div>
+                </div>
+                <div class="quantidade-container">
+                    <img src="img/-.png" class="button" id="produto29-decremento" alt="Decrementar">
+                    <input type="number" id="produto29" value="0" min="0" required>
+                    <img src="img/+.png" class="button" id="produto29-incremento" alt="Incrementar">
+                </div>
+            </div>
+
+            <!-- Uva -->
+            <div class="produto-container">
+                <div class="produto-info">
+                    <img src="img/uva.png" alt="Uva">
+                    <div>
+                        <span>Uva</span>
+                    </div>
+                </div>
+                <div class="quantidade-container">
+                    <img src="img/-.png" class="button" id="produto30-decremento" alt="Decrementar">
+                    <input type="number" id="produto30" value="0" min="0" required>
+                    <img src="img/+.png" class="button" id="produto30-incremento" alt="Incrementar">
+                </div>
+            </div>
+
+            <!-- Cereja -->
+            <div class="produto-container">
+                <div class="produto-info">
+                    <img src="img/cereja.png" alt="Cereja">
+                    <div>
+                        <span>Cereja</span>
+                    </div>
+                </div>
+                <div class="quantidade-container">
+                    <img src="img/-.png" class="button" id="produto31-decremento" alt="Decrementar">
+                    <input type="number" id="produto31" value="0" min="0" required>
+                    <img src="img/+.png" class="button" id="produto31-incremento" alt="Incrementar">
+                </div>
+            </div>
+        </section>
+
+
+        <!-- Botão de envio -->
+        <button id="enviarPedido">Enviar Pedido</button>
+
+        <!-- Resultado da operação -->
+        <div id="resultado" class="alert"></div>
+    </div>
+
+    <script>
+        // Função para incrementar e decrementar as quantidades
+        function ajustarQuantidade(id, incremento) {
+            const input = document.getElementById(id);
+            let quantidade = parseInt(input.value);
+            if (incremento) {
+                quantidade += 1;
+            } else {
+                if (quantidade > 1) {
+                    quantidade -= 1;
+                }
+            }
+            input.value = quantidade;
+        }
+
+        // Adicionando eventos aos botões de incremento e decremento
+        document.getElementById('produto1-incremento').addEventListener('click', function() {
+            ajustarQuantidade('produto1', true);
+        });
+        document.getElementById('produto1-decremento').addEventListener('click', function() {
+            ajustarQuantidade('produto1', false);
+        });
+
+        document.getElementById('produto2-incremento').addEventListener('click', function() {
+            ajustarQuantidade('produto2', true);
+        });
+        document.getElementById('produto2-decremento').addEventListener('click', function() {
+            ajustarQuantidade('produto2', false);
+        });
+
+        document.getElementById('produto3-incremento').addEventListener('click', function() {
+            ajustarQuantidade('produto3', true);
+        });
+        document.getElementById('produto3-decremento').addEventListener('click', function() {
+            ajustarQuantidade('produto3', false);
+        });
+
+        document.getElementById('produto4-incremento').addEventListener('click', function() {
+            ajustarQuantidade('produto4', true);
+        });
+        document.getElementById('produto4-decremento').addEventListener('click', function() {
+            ajustarQuantidade('produto4', false);
+        });
+
+        document.getElementById('produto5-incremento').addEventListener('click', function() {
+            ajustarQuantidade('produto5', true);
+        });
+        document.getElementById('produto5-decremento').addEventListener('click', function() {
+            ajustarQuantidade('produto5', false);
+        });
+
+        document.getElementById('produto6-incremento').addEventListener('click', function() {
+            ajustarQuantidade('produto6', true);
+        });
+        document.getElementById('produto6-decremento').addEventListener('click', function() {
+            ajustarQuantidade('produto6', false);
+        });
+
+        document.getElementById('produto7-incremento').addEventListener('click', function() {
+            ajustarQuantidade('produto7', true);
+        });
+        document.getElementById('produto7-decremento').addEventListener('click', function() {
+            ajustarQuantidade('produto7', false);
+        });
+
+        document.getElementById('produto8-incremento').addEventListener('click', function() {
+            ajustarQuantidade('produto8', true);
+        });
+        document.getElementById('produto8-decremento').addEventListener('click', function() {
+            ajustarQuantidade('produto8', false);
+        });
+
+        document.getElementById('produto9-incremento').addEventListener('click', function() {
+            ajustarQuantidade('produto9', true);
+        });
+        document.getElementById('produto9-decremento').addEventListener('click', function() {
+            ajustarQuantidade('produto9', false);
+        });
+
+        document.getElementById('produto10-incremento').addEventListener('click', function() {
+            ajustarQuantidade('produto10', true);
+        });
+        document.getElementById('produto10-decremento').addEventListener('click', function() {
+            ajustarQuantidade('produto10', false);
+        });
+
+        document.getElementById('produto11-incremento').addEventListener('click', function() {
+            ajustarQuantidade('produto11', true);
+        });
+        document.getElementById('produto11-decremento').addEventListener('click', function() {
+            ajustarQuantidade('produto11', false);
+        });
+
+        document.getElementById('produto12-incremento').addEventListener('click', function() {
+            ajustarQuantidade('produto12', true);
+        });
+        document.getElementById('produto12-decremento').addEventListener('click', function() {
+            ajustarQuantidade('produto12', false);
+        });
+
+        document.getElementById('produto13-incremento').addEventListener('click', function() {
+            ajustarQuantidade('produto13', true);
+        });
+        document.getElementById('produto13-decremento').addEventListener('click', function() {
+            ajustarQuantidade('produto13', false);
+        });
+
+        document.getElementById('produto14-incremento').addEventListener('click', function() {
+            ajustarQuantidade('produto14', true);
+        });
+        document.getElementById('produto14-decremento').addEventListener('click', function() {
+            ajustarQuantidade('produto14', false);
+        });
+
+        document.getElementById('produto15-incremento').addEventListener('click', function() {
+            ajustarQuantidade('produto15', true);
+        });
+        document.getElementById('produto15-decremento').addEventListener('click', function() {
+            ajustarQuantidade('produto15', false);
+        });
+
+        document.getElementById('produto16-incremento').addEventListener('click', function() {
+            ajustarQuantidade('produto16', true);
+        });
+        document.getElementById('produto16-decremento').addEventListener('click', function() {
+            ajustarQuantidade('produto16', false);
+        });
+
+        document.getElementById('produto17-incremento').addEventListener('click', function() {
+            ajustarQuantidade('produto17', true);
+        });
+        document.getElementById('produto17-decremento').addEventListener('click', function() {
+            ajustarQuantidade('produto17', false);
+        });
+
+        document.getElementById('produto18-incremento').addEventListener('click', function() {
+            ajustarQuantidade('produto18', true);
+        });
+        document.getElementById('produto18-decremento').addEventListener('click', function() {
+            ajustarQuantidade('produto18', false);
+        });
+
+        document.getElementById('produto19-incremento').addEventListener('click', function() {
+            ajustarQuantidade('produto19', true);
+        });
+        document.getElementById('produto19-decremento').addEventListener('click', function() {
+            ajustarQuantidade('produto19', false);
+        });
+
+        document.getElementById('produto20-incremento').addEventListener('click', function() {
+            ajustarQuantidade('produto20', true);
+        });
+        document.getElementById('produto20-decremento').addEventListener('click', function() {
+            ajustarQuantidade('produto20', false);
+        });
+
+        document.getElementById('produto21-incremento').addEventListener('click', function() {
+            ajustarQuantidade('produto21', true);
+        });
+        document.getElementById('produto21-decremento').addEventListener('click', function() {
+            ajustarQuantidade('produto21', false);
+        });
+
+        document.getElementById('produto22-incremento').addEventListener('click', function() {
+            ajustarQuantidade('produto22', true);
+        });
+        document.getElementById('produto22-decremento').addEventListener('click', function() {
+            ajustarQuantidade('produto22', false);
+        });
+
+        document.getElementById('produto23-incremento').addEventListener('click', function() {
+            ajustarQuantidade('produto23', true);
+        });
+        document.getElementById('produto23-decremento').addEventListener('click', function() {
+            ajustarQuantidade('produto23', false);
+        });
+
+        document.getElementById('produto24-incremento').addEventListener('click', function() {
+            ajustarQuantidade('produto24', true);
+        });
+        document.getElementById('produto24-decremento').addEventListener('click', function() {
+            ajustarQuantidade('produto24', false);
+        });
+
+        document.getElementById('produto25-incremento').addEventListener('click', function() {
+            ajustarQuantidade('produto25', true);
+        });
+        document.getElementById('produto25-decremento').addEventListener('click', function() {
+            ajustarQuantidade('produto25', false);
+        });
+
+        document.getElementById('produto26-incremento').addEventListener('click', function() {
+            ajustarQuantidade('produto26', true);
+        });
+        document.getElementById('produto26-decremento').addEventListener('click', function() {
+            ajustarQuantidade('produto26', false);
+        });
+
+        document.getElementById('produto27-incremento').addEventListener('click', function() {
+            ajustarQuantidade('produto27', true);
+        });
+        document.getElementById('produto27-decremento').addEventListener('click', function() {
+            ajustarQuantidade('produto27', false);
+        });
+        
+        document.getElementById('produto28-incremento').addEventListener('click', function() {
+            ajustarQuantidade('produto28', true);
+        });
+        document.getElementById('produto28-decremento').addEventListener('click', function() {
+            ajustarQuantidade('produto28', false);
+        });
+        
+        document.getElementById('produto29-incremento').addEventListener('click', function() {
+            ajustarQuantidade('produto29', true);
+        });
+        document.getElementById('produto29-decremento').addEventListener('click', function() {
+            ajustarQuantidade('produto29', false);
+        });
+        
+        document.getElementById('produto30-incremento').addEventListener('click', function() {
+            ajustarQuantidade('produto30', true);
+        });
+        document.getElementById('produto30-decremento').addEventListener('click', function() {
+            ajustarQuantidade('produto30', false);
+        });
+        
+        document.getElementById('produto31-incremento').addEventListener('click', function() {
+            ajustarQuantidade('produto31', true);
+        });
+        document.getElementById('produto31-decremento').addEventListener('click', function() {
+            ajustarQuantidade('produto31', false);
+        });
+
+
+        // Evento de envio do pedido
+        document.getElementById('enviarPedido').addEventListener('click', () => {
+            const revendedor = document.getElementById('revendedor').value;
+            const produto1 = document.getElementById('produto1').value;
+            const produto2 = document.getElementById('produto2').value;
+            const produto3 = document.getElementById('produto3').value;
+            const produto4 = document.getElementById('produto4').value;
+            const produto5 = document.getElementById('produto5').value;
+            const produto6 = document.getElementById('produto6').value;
+            const produto7 = document.getElementById('produto7').value;
+            const produto8 = document.getElementById('produto8').value;
+            const produto9 = document.getElementById('produto9').value;
+            const produto10 = document.getElementById('produto10').value;
+            const produto11 = document.getElementById('produto11').value;
+            const produto12 = document.getElementById('produto12').value;
+            const produto13 = document.getElementById('produto13').value;
+            const produto14 = document.getElementById('produto14').value;
+            const produto15 = document.getElementById('produto15').value;
+            const produto16 = document.getElementById('produto16').value;
+            const produto17 = document.getElementById('produto17').value;
+            const produto18 = document.getElementById('produto18').value;
+            const produto19 = document.getElementById('produto19').value;
+            const produto20 = document.getElementById('produto20').value;
+            const produto21 = document.getElementById('produto21').value;
+            const produto22 = document.getElementById('produto22').value;
+            const produto23 = document.getElementById('produto23').value;
+            const produto24 = document.getElementById('produto24').value;
+            const produto25 = document.getElementById('produto25').value;
+            const produto26 = document.getElementById('produto26').value;
+            const produto27 = document.getElementById('produto27').value;
+            const produto28 = document.getElementById('produto28').value;
+            const produto29 = document.getElementById('produto29').value;
+            const produto30 = document.getElementById('produto30').value;
+            const produto31 = document.getElementById('produto31').value;
+
+
+
+            if (!revendedor || !produto1 || !produto2 || !produto3 || !produto4 || !produto5 || !produto6 || !produto7 || !produto8 || !produto9 || !produto10 || !produto11 || !produto12 || !produto13 || !produto14 || !produto15 || !produto16 || !produto17 || !produto18 || !produto19 || !produto20 || !produto21 || !produto22 || !produto23 || !produto24 || !produto25 || !produto26 || !produto27 || !produto28 || !produto29 || !produto30 || !produto31) {
+                showMessage('Por favor, preencha todos os campos.', 'error');
+                return;
+            }
+
+            const dadosPedido = {
+                revendedor: revendedor,
+                produto1: produto1,
+                produto2: produto2,
+                produto3: produto3,
+                produto4: produto4,
+                produto5: produto5,
+                produto6: produto6,
+                produto7: produto7,
+                produto8: produto8,
+                produto9: produto9,
+                produto10: produto10,
+                produto11: produto11,
+                produto12: produto12,
+                produto13: produto13,
+                produto14: produto14,
+                produto15: produto15,
+                produto16: produto16,
+                produto17: produto17,
+                produto18: produto18,
+                produto19: produto19,
+                produto20: produto20,
+                produto21: produto21,
+                produto22: produto22,
+                produto23: produto23,
+                produto24: produto24,
+                produto25: produto25,
+                produto26: produto26,
+                produto27: produto27,
+                produto28: produto28,
+                produto29: produto29,
+                produto30: produto30,
+                produto31: produto31
+            };
+
+
+            fetch("https://sistemapedidosii.onrender.com/enviar-pedido", {
+    method: "POST",
+    headers: {
+        "Content-Type": "application/json"
+    },
+    body: JSON.stringify(dadosPedido)
+})
+
+
+           // fetch('http://localhost:3000/enviar-pedido', {
+           //     method: 'POST',
+           //     headers: {
+           //         'Content-Type': 'application/json'
+           //     },
+           //     body: JSON.stringify(dadosPedido)
+           // })
+
+            .then(response => response.json())
+            .then(data => {
+                if (data.status === 'success') {
+                    showMessage('Pedido enviado com sucesso!', 'success');
+                } else {
+                    showMessage('Houve um erro ao enviar o pedido.', 'error');
+                }
+            })
+            .catch(error => {
+                console.error('Erro:', error);
+                showMessage('Erro ao enviar o pedido. Tente novamente.', 'error');
+            });
+        });
+
+        function showMessage(message, type) {
+            const resultado = document.getElementById('resultado');
+            resultado.textContent = message;
+            resultado.className = 'alert ' + (type === 'success' ? 'success' : '');
+            resultado.style.display = 'block';
+        }
+    </script>
+</body>
+</html>
