@@ -1,65 +1,32 @@
-<!DOCTYPE html>
-<html lang="pt-br">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Sistema de Pedidos</title>
-    <style>
-        /* Mantenha SEU CSS original aqui */
-    </style>
-</head>
-<body>
-    <div class="container">
-        <!-- Seu formulário original (sem mudanças) -->
-    </div>
+document.getElementById("enviarPedido").addEventListener("click", async () => {
+  try {
+    const revendedor = document.getElementById("revendedor").value.trim();
+    if (!revendedor) {
+      alert("Digite seu nome!");
+      return;
+    }
 
-    <script>
-        // Ajuste de quantidades (dinâmico para todos os botões +/-)
-        document.querySelectorAll('[id*="-incremento"], [id*="-decremento"]').forEach(btn => {
-            btn.addEventListener('click', (e) => {
-                const inputId = e.target.id.replace(/-incremento|-decremento/, '');
-                const input = document.getElementById(inputId);
-                const isIncremento = e.target.id.includes('incremento');
-                input.value = Math.max(0, parseInt(input.value) + (isIncremento ? 1 : -1));
-            });
-        });
+    // Coleta dados dos produtos (inclui zerados)
+    const produtos = {};
+    document.querySelectorAll("input[type='number']").forEach(input => {
+      produtos[input.id] = input.value || 0;
+    });
 
-        // Envio do pedido (valida apenas o revendedor)
-        document.getElementById('enviarPedido').addEventListener('click', async () => {
-            const revendedor = document.getElementById('revendedor').value.trim();
-            
-            if (!revendedor) {
-                alert('Digite seu nome!');
-                return;
-            }
+    const response = await fetch("https://sistemapedidosii.onrender.com/enviar-pedido", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ revendedor, ...produtos }),
+    });
 
-            // Coleta todos os produtos (incluindo zerados)
-            const produtos = {};
-            document.querySelectorAll('input[type="number"]').forEach(input => {
-                produtos[input.id] = input.value || 0; // Garante que valores vazios = 0
-            });
+    const result = await response.json();
+    if (!response.ok) throw new Error(result.error || "Erro desconhecido");
+    
+    alert(result.message);
+    // Limpa o formulário (opcional)
+    document.querySelector("form").reset();
 
-            try {
-                const response = await fetch('https://sistemapedidosii.onrender.com/enviar-pedido', {
-                    method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({ revendedor, ...produtos })
-                });
-                
-                const result = await response.json();
-                alert(result.message || 'Pedido enviado!');
-                
-                // Limpa o formulário (opcional)
-                if (result.success) {
-                    document.getElementById('revendedor').value = '';
-                    document.querySelectorAll('input[type="number"]').forEach(input => {
-                        input.value = '0';
-                    });
-                }
-            } catch (error) {
-                alert('Erro de conexão. Tente novamente.');
-            }
-        });
-    </script>
-</body>
-</html>
+  } catch (error) {
+    console.error("Erro no frontend:", error);
+    alert(`Erro: ${error.message}`);
+  }
+});
