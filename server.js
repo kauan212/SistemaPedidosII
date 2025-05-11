@@ -1,79 +1,52 @@
-require('dotenv').config();
-const express = require('express');
-const nodemailer = require('nodemailer');
-const cors = require('cors');
-const path = require('path');
-
-const app = express();
-const PORT = process.env.PORT || 3000;
-
-// Configurações
-app.use(express.json());
-app.use(cors());
-app.use(express.static(path.join(__dirname)));
-app.use('/img', express.static(path.join(__dirname, 'img')));
-
-// Configuração do Gmail
-const transporter = nodemailer.createTransport({
-  host: 'smtp.gmail.com',
-  port: 465,
-  secure: true,
-  auth: {
-    user: process.env.EMAIL_USER,
-    pass: process.env.EMAIL_PASS
-  }
-});
-
-// Rotas
-app.get('/', (req, res) => {
-  res.sendFile(path.join(__dirname, 'index.html'));
-});
-
 app.post('/enviar-pedido', async (req, res) => {
   try {
+    console.log("Dados recebidos:", req.body); // 👈 Log para debug
+
     const { revendedor, ...produtos } = req.body;
 
-    // Validação do revendedor (única obrigatória)
-    if (!revendedor || revendedor.trim() === '') {
-      return res.status(400).json({ error: 'Nome do revendedor é obrigatório!' });
+    if (!revendedor?.trim()) {
+      return res.status(400).json({ error: "Nome do revendedor é obrigatório!" });
     }
 
-    // Filtra apenas itens com quantidade > 0 para o e-mail
-    const itensPedido = Object.entries(produtos)
-      .filter(([_, quantidade]) => quantidade > 0) // 👈 Oculta itens zerados
-      .map(([nome, quantidade]) => {
-        const nomeFormatado = nome
-          .replace('produto', '')
-          .replace(/(\d+)/, ' ')
-          .trim();
-        return `${nomeFormatado}: ${quantidade}`;
-      });
+    // Configuração do transporter COM tratamento de erro
+    const transporter = nodemailer.createTransport({
+      service: "gmail",
+      host: "smtp.gmail.com",
+      port: 465,
+      secure: true,
+      auth: {
+        user: process.env.EMAIL_USER,
+        pass: process.env.EMAIL_PASS,
+      },
+      tls: { rejectUnauthorized: false },
+    });
 
-    // Monta o e-mail (só mostra itens selecionados)
-    const textoEmail = `Revendedor: ${revendedor}\n\nItens:\n${itensPedido.join('\n') || 'Nenhum item selecionado'}`;
-    const htmlEmail = `
-      <h1>Novo Pedido</h1>
-      <p><strong>Revendedor:</strong> ${revendedor}</p>
-      <h2>Itens:</h2>
-      ${itensPedido.length > 0 ? `<ul>${itensPedido.map(item => `<li>${item}</li>`).join('')}</ul>` : '<p>Nenhum item selecionado</p>'}
-    `;
+    // Verificação SMTP
+    await transporter.verify();
+
+    // Processa itens (ignora zerados)
+    const itensPedido = Object.entries(produtos)
+      .filter(([_, qtd]) => qtd > 0)
+      .map(([nome, qtd]) => `${nome.replace('produto', 'Produto ')}: ${qtd}`);
 
     await transporter.sendMail({
       from: `Sistema de Pedidos <${process.env.EMAIL_USER}>`,
-      to: 'kauanoliveiradesouza2016@gmail.com',
+      to: "kauanoliveiradesouza2016@gmail.com",
       subject: `📦 Pedido de ${revendedor}`,
-      text: textoEmail,
-      html: htmlEmail
+      text: `Revendedor: ${revendedor}\nItens:\n${itensPedido.join("\n") || "Nenhum item selecionado"}`,
     });
 
-    res.json({ success: true, message: 'Pedido enviado!' });
+    res.json({ success: true, message: "Pedido enviado!" });
 
   } catch (error) {
-    console.error('Erro:', error);
-    res.status(500).json({ error: 'Erro ao enviar. Tente novamente.' });
+    console.error("ERRO DETALHADO:", {
+      message: error.message,
+      stack: error.stack,
+      response: error.response,
+    });
+    res.status(500).json({ 
+      error: "Erro ao enviar pedido",
+      details: process.env.NODE_ENV === "development" ? error.message : null,
+    });
   }
-});
-
-app.listen(PORT, () => {
-  console.log(`Servidor rodando em http://localhost:${PORT}`);
 });
